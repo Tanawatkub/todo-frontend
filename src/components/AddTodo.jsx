@@ -21,13 +21,15 @@ export default function AddTodo({ onAdd, loading }) {
     try {
       await onAdd({ title, description });
 
-      // ✅ แสดง popup แจ้งเพิ่มสำเร็จ
+      // ✅ Popup แจ้งเพิ่มงานสำเร็จ
       await Swal.fire({
         icon: 'success',
         title: 'เพิ่มงานสำเร็จ!',
         text: `"${title}" ถูกเพิ่มเข้ารายการเรียบร้อยแล้ว`,
         showConfirmButton: false,
         timer: 1500,
+        background: '#f0fdf4', // สีพื้นหลังเขียวอ่อน
+        color: '#065f46',
       });
 
       setTitle('');
@@ -37,13 +39,15 @@ export default function AddTodo({ onAdd, loading }) {
         icon: 'error',
         title: 'เกิดข้อผิดพลาด',
         text: 'ไม่สามารถเพิ่มรายการได้ กรุณาลองอีกครั้ง',
+        background: '#fef2f2',
+        color: '#7f1d1d',
       });
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border-2 border-purple-100">
-      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gray-700">
+    <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border-2 border-cyan-100">
+      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 text-gradient">
         <span className="text-3xl">➕</span> เพิ่มรายการใหม่
       </h2>
 
@@ -59,20 +63,20 @@ export default function AddTodo({ onAdd, loading }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="ชื่อรายการ"
-          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-purple-500 outline-none"
+          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-sky-500 outline-none"
         />
 
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)"
-          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-purple-500 outline-none"
+          className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-sky-500 outline-none"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all"
+          className="btn-gradient hover:shadow-xl active:scale-[0.98]"
         >
           เพิ่มรายการ
         </button>

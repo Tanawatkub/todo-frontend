@@ -43,6 +43,8 @@ export default function Home() {
         text: `"${todo.title}" ถูกเพิ่มแล้ว 🎉`,
         timer: 1500,
         showConfirmButton: false,
+        background: '#f0fdf4',
+        color: '#065f46',
       });
     } catch (error) {
       console.error('Add todo failed:', error);
@@ -50,6 +52,8 @@ export default function Home() {
         icon: 'error',
         title: 'เพิ่มไม่สำเร็จ',
         text: 'กรุณาลองอีกครั้ง',
+        background: '#fef2f2',
+        color: '#7f1d1d',
       });
     }
   };
@@ -58,9 +62,7 @@ export default function Home() {
   const handleToggle = async (todo) => {
     try {
       const updated = await todoAPI.updateTodo(todo.id, { done: !todo.done });
-      setTodos((prev) =>
-        prev.map((t) => (t.id === todo.id ? updated : t))
-      );
+      setTodos((prev) => prev.map((t) => (t.id === todo.id ? updated : t)));
 
       Swal.fire({
         toast: true,
@@ -71,30 +73,65 @@ export default function Home() {
           : `ทำเสร็จ "${todo.title}" ✅`,
         showConfirmButton: false,
         timer: 1200,
+        background: '#ecfeff',
+        color: '#0369a1',
       });
     } catch (error) {
       console.error('Toggle failed:', error);
     }
   };
 
-  // 🗑️ ลบ Todo
+  // 🗑️ ลบ Todo (มี Popup ยืนยัน)
   const handleDelete = async (id) => {
-    try {
-      await todoAPI.deleteTodo(id);
-      setTodos((prev) => prev.filter((t) => t.id !== id));
-    } catch (error) {
-      console.error('Delete failed:', error);
+    const target = todos.find((t) => t.id === id);
+    const confirm = await Swal.fire({
+      title: 'ต้องการลบรายการนี้หรือไม่?',
+      text: `คุณแน่ใจหรือไม่ว่าจะลบ "${target?.title}"`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0ea5e9',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'ลบเลย!',
+      cancelButtonText: 'ยกเลิก',
+      background: '#f0f9ff',
+      color: '#0369a1',
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await todoAPI.deleteTodo(id);
+        setTodos((prev) => prev.filter((t) => t.id !== id));
+
+        Swal.fire({
+          icon: 'success',
+          title: 'ลบเรียบร้อยแล้ว!',
+          text: `"${target?.title}" ถูกลบออกจากรายการ`,
+          timer: 1200,
+          showConfirmButton: false,
+          background: '#f0fdf4',
+          color: '#065f46',
+        });
+      } catch (error) {
+        console.error('Delete failed:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'ไม่สามารถลบได้',
+          text: 'กรุณาลองใหม่อีกครั้ง',
+          background: '#fef2f2',
+          color: '#7f1d1d',
+        });
+      }
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start py-12 px-4 bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100">
+    <div className="min-h-screen flex flex-col items-center justify-start py-12 px-4 bg-gradient-to-br from-sky-50 via-cyan-50 to-emerald-50">
       {/* HEADER */}
       <header className="text-center mb-10">
-        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
-          ✨ My Todo List 📄
+        <h1 className="text-5xl font-extrabold text-gradient mb-2">
+          🌿 My Todo List 📋
         </h1>
-        <p className="text-gray-600 text-lg">Organize your tasks beautifully</p>
+        <p className="text-gray-600 text-lg">จัดระเบียบงานของคุณให้ง่ายและสวยงาม</p>
 
         <div className="mt-3">
           {connected ? (
@@ -115,7 +152,7 @@ export default function Home() {
         <TodoStats todos={todos} />
         <TodoList
           todos={todos}
-          onUpdate={handleToggle} // ✅ เปลี่ยนจาก onToggle → onUpdate
+          onUpdate={handleToggle}
           onDelete={handleDelete}
           loading={loading}
         />
@@ -124,7 +161,7 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="mt-12 text-center text-sm text-gray-500">
         <p>
-          Made with 💖 using <b>Next.js</b> + <b>Flask</b>
+          Made with 💙 using <b>Next.js</b> + <b>Flask</b>
         </p>
         <p className="text-gray-400">
           Frontend: GitHub Pages | Backend: Render | Database: PostgreSQL
