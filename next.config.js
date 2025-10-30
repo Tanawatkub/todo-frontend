@@ -21,11 +21,11 @@ const nextConfig = {
   // ✅ ให้ URL ทุกหน้ามี trailing slash (เช่น /about/)
   trailingSlash: true,
 
-  // ❌ ถ้าใช้ App Router (src/app/) ไม่ต้องเปิด experimental.appDir แล้ว
-  // ถ้าเปิดจะเตือนว่า invalid experimental key
+  // ❌ ไม่ต้องใช้ experimental.appDir แล้ว
   // experimental: {
   //   appDir: true,
   // },
 };
 
-export default nextConfig;
+// ✅ Export แบบ CommonJS เพื่อให้ GitHub Actions build ผ่านแน่นอน
+module.exports = nextConfig;
